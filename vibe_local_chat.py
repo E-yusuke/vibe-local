@@ -34,19 +34,21 @@ class Config:
         self.context_window = 32768
         self.debug = False
         
-        # Platform-specific data directories
-        if os.name == "nt":  # Windows
-            appdata = os.environ.get("LOCALAPPDATA")
-            if not appdata:
-                appdata = os.path.join(os.path.expanduser("~"), "AppData", "Local")
-            self.data_dir = os.path.join(appdata, "vibe-local", "data")
-            self.excel_dir = os.path.join(appdata, "vibe-local", "excel")
-        else:  # Unix-like
-            home = os.path.expanduser("~")
-            self.data_dir = os.path.join(home, ".local", "share", "vibe-local", "data")
-            self.excel_dir = os.path.join(home, ".local", "share", "vibe-local", "excel")
+        # Determine base directory:
+        # 1. If running as EXE (PyInstaller), use sys.executable's directory
+        # 2. Otherwise, use current working directory
+        if getattr(sys, 'frozen', False):
+            # Running as bundled EXE (PyInstaller)
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            # Running as Python script
+            base_dir = os.getcwd()
         
-        # Create directories
+        # Set data directories relative to base directory (EXE or script location)
+        self.data_dir = os.path.join(base_dir, "data")
+        self.excel_dir = os.path.join(base_dir, "excel")
+        
+        # Create directories if they don't exist
         os.makedirs(self.data_dir, exist_ok=True)
         os.makedirs(self.excel_dir, exist_ok=True)
 
