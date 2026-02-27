@@ -19,6 +19,7 @@ from pathlib import Path
 try:
     from llm_client import get_llm_client, AzureOpenAIClient, GeminiClient
     from local_tools import SQLiteTool, ExcelTool
+    from default_config import apply_defaults
 except ImportError as e:
     print(f"Error: Could not import required modules. {e}")
     print("Make sure llm_client.py and local_tools.py are in the same directory.")
@@ -260,6 +261,17 @@ def main():
     parser.add_argument("--temp", type=float, default=0.7, help="Temperature (0-1)")
     parser.add_argument("--max-tokens", type=int, default=8192, help="Max tokens")
     args = parser.parse_args()
+    
+    # Apply default configuration values (if set during EXE build)
+    try:
+        defaults_applied = apply_defaults()
+        if defaults_applied and args.debug:
+            print("[debug] Applied default configuration values")
+            for key in defaults_applied:
+                print(f"[debug]   - {key}")
+    except Exception as e:
+        if args.debug:
+            print(f"[debug] Warning: Could not apply defaults: {e}")
     
     # Initialize config
     config = Config()

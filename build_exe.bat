@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 REM PyInstaller build script for vibe-local
 REM This script builds the standalone EXE application
 REM
@@ -30,7 +31,7 @@ if !errorlevel! neq 0 (
 )
 
 for /f "tokens=*" %%i in ('python --version') do set PYTHON_VER=%%i
-echo ✓ Found: %PYTHON_VER%
+echo ✓ Found: !PYTHON_VER!
 echo.
 
 REM Check if PyInstaller is installed
@@ -88,11 +89,11 @@ echo.
 
 REM Show output location
 set EXE_PATH=dist\vibe-local.exe
-if exist %EXE_PATH% (
-    echo ✓ EXE created: %EXE_PATH%
+if exist !EXE_PATH! (
+    echo ✓ EXE created: !EXE_PATH!
     echo.
     echo 📦 Distribution package:
-    echo   Location: %CD%\dist\
+    echo   Location: !CD!\dist\
     echo.
     echo 📋 Before distribution, create this folder structure:
     echo   vibe-local.exe
@@ -119,4 +120,11 @@ if exist %EXE_PATH% (
 )
 
 echo.
+echo 🔧 Next steps:
+echo   1. create_distribution.bat を実行して配布パッケージを作成
+echo   2. または以下のコマンドで直接テスト実行:
+echo      !EXE_PATH!
+echo.
+echo Done!
 pause
+endlocal

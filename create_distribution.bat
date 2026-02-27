@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 REM Create distribution package for vibe-local EXE
 REM This script creates a ready-to-distribute folder with:
 REM   - vibe-local.exe
